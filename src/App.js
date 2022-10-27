@@ -74,12 +74,12 @@ function App() {
 
     // getData();
 
+    let unsubscribe = null;
     const getrealtimedata = async () => {
 
 
-
       const q = query(collection(db, "posts"));
-      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      unsubscribe = onSnapshot(q, (querySnapshot) => {
         const posts = [];
         querySnapshot.forEach((doc) => {
           posts.push(doc.data());
@@ -97,6 +97,11 @@ function App() {
     }
 
     getrealtimedata()
+
+    return () => {
+      unsubscribe();
+    }
+
   }, [])
 
 
