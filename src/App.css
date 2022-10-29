@@ -1,38 +1,55 @@
-.App {
-  text-align: center;
+body{
+  margin: 0;
+  padding: 0;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.main{
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
+  width: 100%;
 }
-
-.App-link {
-  color: #61dafb;
+.container1{
+  width: 50%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 8px;
+  border: 1px solid black;
+  border-radius: 10px;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.container1 .propic{
+  width: 8%;
+}
+.container1 .propic img{
+  width: 100%;
+  border-radius: 50%;
+}
+.container1 .inputpost{
+  width: 80%;
+  cursor: pointer;
+}
+.container1 .inputpost input{
+  width: 100%;
+  cursor: pointer;
+  height: 5vh;
+  border-radius: 25px;
+  background-color: rgb(233, 233, 233);
+  border: none;
+  outline: none;
+}
+.container1 .inputpost input:hover{
+  background-color: lightgray;
+}
+.container1 .inputpost input::placeholder{
+padding: 12px;
+}
+.modal form input{
+  height:10vh;
+  border: none;
+  outline: black;
+}
+.modal .modal-dialog .modal-content .modal-body form button{
+  margin-top: 90px;
+  width: 100%;
 }
