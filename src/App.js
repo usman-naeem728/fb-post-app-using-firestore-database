@@ -10,6 +10,13 @@ import {
 import { async } from '@firebase/util';
 import moment from 'moment/moment';
 import profilepic from "./profileimg.jpg";
+import like from "./like.png";
+import share from "./share.png";
+import comment from "./comment.png";
+import more from "./more.png";
+import delet from "./delete.png";
+import edit from "./edit.png";
+import image from "./image.png"
 
 const firebaseConfig = {
   apiKey: "AIzaSyDSn9S0e11dBXK2hAfD6o5uo_-lJxeQEiQ",
@@ -55,6 +62,23 @@ function App() {
       console.error("Error adding document: ", e);
     }
 
+
+
+    // const cloudinaryData = new FormData();
+    // cloudinaryData.append("file", img);
+    // cloudinaryData.append("upload_preset", "preset-name");
+    // cloudinaryData.append("cloud_name", process.env.REACT_APP_CLOUDINARY_CLOUD_NAME);
+    // console.log(cloudinaryData);
+    // axios.post(`https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}/upload`, {
+    //   body: cloudinaryData,
+    // })
+    //   .then(res => {
+    //     res.json();
+    //     console.log("from then", res);
+    //   })
+    //   .catch(err => {
+    //     console.log("from catch", err);
+    //   })
   }
 
   const deletePost = async (postId) => {
@@ -144,12 +168,15 @@ function App() {
 
 
       <div className='container1'>
-        <div className='propic'>
-          <img src={profilepic} />
+        <div className='postbox'>
+          <div className='propic'>
+            <img src={profilepic} />
+          </div>
+          <div className='inputpost'>
+            <input placeholder="What's in your mind" data-bs-toggle="modal" data-bs-target="#exampleModal" disabled />
+          </div>
         </div>
-        <div className='inputpost'>
-          <input placeholder="What's in your mind" data-bs-toggle="modal" data-bs-target="#exampleModal" disabled />
-        </div>
+
       </div>
 
 
@@ -164,15 +191,15 @@ function App() {
             </div>
             <div className="modal-body">
               <form className="input1" onSubmit={savePost}>
-                <input  placeholder="What's in your mind" onChange={(e) => {
+                <input placeholder="What's in your mind" onChange={(e) => {
                   setposttext(e.target.value)
                 }} />
-                <button className="btn btn-outline-secondary " type="submit">Post</button>
+                <div className='upload'>
+                  <img src={image} /> <spam> <input type="file" /> upload image</spam>
+                </div>
+                <button className="btn btn-outline-secondary " type="submit" data-bs-dismiss="modal" aria-label="Close">Post</button>
               </form>
             </div>
-            {/* <div className="modal-footer">
-              <button type="button" className="btn btn-primary">Save changes</button>
-            </div> */}
           </div>
         </div>
       </div>
@@ -187,75 +214,125 @@ function App() {
       </div> */}
 
       {/* now start posting news  */}
-      <div className='container'>
 
 
 
 
 
 
-        {
-          Post.map((eachPost, i) => (
-            <div className={`card mb-3 col-lg-6 col-sm-12 my-3`} key={i} >
-              <div className="row g-0">
-                <div className="col-md-8">
-                  <div className="card-body">
-                    <h1 className="card-title"><b> {eachPost.tittle} </b></h1>
-                    <h3 className="card-text">
-                      <i>
-                        {(eachPost.id === editing.editingId) ?
-                          <form onSubmit={updatePost}>
-                            <input
-                              type="text"
-                              value={editing.editingText}
-                              onChange={(e) => {
-                                setEditing({
-                                  ...editing,
-                                  editingText: e.target.value
-                                })
-                              }}
-                              placeholder="please enter updated value" />
-                            <button type="submit">Update</button>
-                          </form>
-                          :
-                          eachPost?.posttext
-                        }
-                      </i>
-                    </h3>
-                    <h6>{moment((eachPost?.createdon?.seconds) ?
-                      eachPost?.createdon?.seconds * 1000
-                      :
-                      undefined)
-                      .format('MMMM Do YYYY, h:mm a')}</h6>
+
+      {
+        Post.map((eachPost, i) => (
+          <div className="card col-lg-6 my-3" key={i} >
+            {/* <div className="row g-0 "> */}
+            <div className="col-md-8">
+              <div className="card-body">
+                <div className='posttittle'>
+                  <img src={profilepic} />
+                  <h6 className="card-title"> Muhammad Usman Naeem
+                    <br />
+                    <span>
+                      {moment((eachPost?.createdon?.seconds) ?
+                        eachPost?.createdon?.seconds * 1000
+                        :
+                        undefined)
+                        .format('Do MMMM YYYY  h:mm a')}
+                    </span>
+                  </h6>
+                </div>
+                <div className='more '>
+                  <div className='dropdown'>
+
+                    <img src={more} className="btn  dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" />
+
+                    <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                      <li onClick={() => {
+
+                        deletePost(eachPost?.id)
+                      }
+                      } >
+                        <a className="dropdown-item" href="#">
+                          <img src={delet} />
+                          Delete Post </a>
+                      </li>
+
+                      {/* <li>
+                        <a className="dropdown-item" href="#"> */}
+                      {(editing.editingId === eachPost?.id) ? null :
+                        <li
+                          onClick={() => {
+                            setEditing({
+                              editingId: eachPost?.id,
+                              editingText: eachPost?.posttext
+                            })
+
+                          }}>
+                          <a className="dropdown-item" href="#"  >
+                            <img src={edit} />
+                            Edit Post
+                          </a>
+                        </li>
+                      }
+                      {/* </a>
+                      </li> */}
+                    </ul>
+
                   </div>
-                  <button onClick={() => {
+                </div>
+                <div className='postText my-5'>
 
-                    deletePost(eachPost?.id)
-                  }
-                  } >delete</button>
+                  <h3 className="card-text">
 
+                    {(eachPost.id === editing.editingId) ?
+                      <form onSubmit={updatePost} className="updateform" >
+                        <input
+                          id='updateinput'
+                          type="text"
+                          value={editing.editingText}
+                          onChange={(e) => {
+                            setEditing({
+                              ...editing,
+                              editingText: e.target.value
+                            })
+                          }}
+                          placeholder="please enter updated value" />
+                        <button type="submit" className='btn btn-outline-success'>Update</button>
+                      </form>
+                      :
+                      eachPost?.posttext
+                    }
 
-                  {(editing.editingId === eachPost?.id) ? null :
-                    <button onClick={() => {
+                  </h3>
+                </div>
 
-                      setEditing({
-                        editingId: eachPost?.id,
-                        editingText: eachPost?.posttext
-                      })
+              </div>
 
-                    }} >Edit</button>
-                  }
+              <div className="btns mx-2">
+                <div className="like"><img src={like} alt="" />
+                  <span>Like</span>
+                </div>
+                <div className="comment"><img src={comment} alt="" />
+                  <span>Comment</span>
+                </div>
+                <div className="share"><img src={share} />
+                  <span>Share</span>
                 </div>
               </div>
+
+
+
+
             </div>
-          ))
-        }
+          </div>
+          // </div>
+        ))
+      }
 
 
 
 
-      </div>
     </div>
+
 
 
 
