@@ -9,6 +9,7 @@ import {
 } from "firebase/firestore";
 import { async } from '@firebase/util';
 import moment from 'moment/moment';
+import axios from 'axios';
 import profilepic from "./profileimg.jpg";
 import like from "./like.png";
 import share from "./share.png";
@@ -40,7 +41,7 @@ function App() {
   const [Post, setpost] = useState([])
   const [posttext, setposttext] = useState("")
   const [posttitte, setposttittle] = useState("")
-
+  const [img, setimg] = useState(null);
   const [editing, setEditing] = useState({
     editingId: null,
     editingText: ""
@@ -50,35 +51,51 @@ function App() {
   const savePost = async (e) => {
     e.preventDefault();
 
-    console.log("post", posttext, posttitte)
+    // console.log("post", posttext, posttitte)
 
-    try {
-      const docRef = await addDoc(collection(db, "posts"), {
-        posttext: posttext,
-        createdon: serverTimestamp(),
-      });
-      console.log("Document written with ID: ", docRef.id);
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
+    // try {
+    //   const docRef = await addDoc(collection(db, "posts"), {
+    //     posttext: posttext,
+    //     createdon: serverTimestamp(),
+    //   });
+    //   console.log("Document written with ID: ", docRef.id);
+    // } catch (e) {
+    //   console.error("Error adding document: ", e);
+    // }
 
 
 
-    // const cloudinaryData = new FormData();
-    // cloudinaryData.append("file", img);
-    // cloudinaryData.append("upload_preset", "preset-name");
-    // cloudinaryData.append("cloud_name", process.env.REACT_APP_CLOUDINARY_CLOUD_NAME);
-    // console.log(cloudinaryData);
-    // axios.post(`https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}/upload`, {
-    //   body: cloudinaryData,
-    // })
-    //   .then(res => {
-    //     res.json();
-    //     console.log("from then", res);
-    //   })
-    //   .catch(err => {
-    //     console.log("from catch", err);
-    //   })
+    const cloudinaryData = new FormData();
+    cloudinaryData.append("file", img);
+    cloudinaryData.append("upload_preset", "imagedatabase");
+    cloudinaryData.append("cloud_name", "dhgxgvpmw");
+    console.log(cloudinaryData);
+    axios.post(`https://api.cloudinary.com/v1_1/dhgxgvpmw/image/upload`,
+      cloudinaryData,
+      {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      }
+    )
+      .then(async res => {
+
+        console.log("from then", res.data);
+
+        console.log("post", posttext, posttitte)
+
+        try {
+          const docRef = await addDoc(collection(db, "posts"), {
+            posttext: posttext,
+            createdon: serverTimestamp(),
+            postimg: res?.data?.url,
+          });
+          console.log("Document written with ID: ", docRef.id);
+        } catch (e) {
+          console.error("Error adding document: ", e);
+        }
+      })
+      .catch(err => {
+        console.log("from catch", err);
+      })
   }
 
   const deletePost = async (postId) => {
@@ -195,7 +212,10 @@ function App() {
                   setposttext(e.target.value)
                 }} />
                 <div className='upload'>
-                  <img src={image} /> <spam> <input type="file" /> upload image</spam>
+                  <img src={image} /> <span> <input type="file" onChange={(e) => {
+                    setimg(e.currentTarget.files[0])
+                  }} /> upload image</span>
+                  {console.log(img)}
                 </div>
                 <button className="btn btn-outline-secondary " type="submit" data-bs-dismiss="modal" aria-label="Close">Post</button>
               </form>
@@ -306,7 +326,9 @@ function App() {
                 </div>
 
               </div>
-
+              <div className='postimg'>
+                <img src={eachPost.postimg} />
+              </div>
               <div className="btns mx-2">
                 <div className="like"><img src={like} alt="" />
                   <span>Like</span>

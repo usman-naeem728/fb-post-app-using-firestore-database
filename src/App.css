@@ -165,3 +165,10 @@ body {
   margin-left: 10px;
   font-size: 11px;
 }
+.postimg{
+  /* border: 1px solid black; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30vh;
+}
