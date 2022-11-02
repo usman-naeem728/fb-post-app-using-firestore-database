@@ -53,15 +53,15 @@ function App() {
 
     // console.log("post", posttext, posttitte)
 
-    // try {
-    //   const docRef = await addDoc(collection(db, "posts"), {
-    //     posttext: posttext,
-    //     createdon: serverTimestamp(),
-    //   });
-    //   console.log("Document written with ID: ", docRef.id);
-    // } catch (e) {
-    //   console.error("Error adding document: ", e);
-    // }
+    try {
+      const docRef = await addDoc(collection(db, "posts"), {
+        posttext: posttext,
+        createdon: serverTimestamp(),
+      });
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
 
 
 
@@ -326,9 +326,11 @@ function App() {
                 </div>
 
               </div>
-              <div className='postimg'>
-                <img src={eachPost.postimg} />
-              </div>
+              {(img === null)? "" :
+                <div className='postimg'>
+                  <img src={eachPost.postimg} />
+                </div>
+              }
               <div className="btns mx-2">
                 <div className="like"><img src={like} alt="" />
                   <span>Like</span>
