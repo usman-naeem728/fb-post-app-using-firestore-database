@@ -4,32 +4,54 @@ import { Routes, Route, Link } from "react-router-dom"
 import Signin from './components/signin';
 import Signup from './components/signup';
 import Home from './components/home';
-
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 
 
 
 function App() {
 
 
-  const [login, setlogin] = useState(true);
+  const [login, setlogin] = useState(false);
 
+  useEffect(() => {
+    const auth = getAuth();
+    const unSubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        const uid = user.uid;
+        setlogin(true)
+      } else {
+        // User is signed out
+        // ...
+        setlogin(false)
+      }
+    });
+    return () => {
+      unSubscribe();
+    }
 
+  }, [])
 
+  const logoutHandler = () => {
+    const auth = getAuth();
+    signOut(auth).then(() => {
+      // Sign-out successful.
+    }).catch((error) => {
+      // An error happened.
+    });
+  }
   return (
     <div className='main'>
-      <button onClick={() => {
-        setlogin(!login)
-      }} >{
-          (login) ?
-            "Logout"
-            :
-            "login"
-        }</button>
+
 
       {(login) ?
         <ul>
           <li>
             <Link to={`/`} >Home</Link>
+          </li>
+          <li>
+            <button onClick={logoutHandler}>logout</button>
           </li>
         </ul> :
         <ul>
